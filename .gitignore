@@ -1,0 +1,6 @@
+node_modules/
+*.env
+.cache
+
+1-sections
+dev-data
