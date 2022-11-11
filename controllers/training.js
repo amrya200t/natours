@@ -9,6 +9,7 @@ const aliasTopTours = (req, res, next) => {
 };
 
 class APIFeatures {
+  //
   constructor(query, queryString) {
     this.query = query;
     this.queryString = queryString;
