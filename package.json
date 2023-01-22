@@ -2,7 +2,7 @@
   "name": "4-natours",
   "version": "1.0.0",
   "description": "Learning node, express and mongoDB",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "start:dev": "nodemon server.js",
     "start:prod": "set NODE_ENV=production&& nodemon server.js",
