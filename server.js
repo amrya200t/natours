@@ -1,46 +1,50 @@
-const mongoose = require('mongoose');
-require('dotenv').config({ path: './config.env' });
+const mongoose = require("mongoose");
+require("dotenv").config({ path: "./config.env" });
 
-process.on('uncaughtException', (err) => {
+const PORT = process.env.PORT || 8000;
+const DB_URL = process.env.DATABASE_URL.replace(
+  "<PASSWORD>",
+  process.env.DATABASE_PASSWORD
+);
+
+process.on("uncaughtException", (err) => {
   // eslint-disable-next-line no-console
-  console.log('UNHANDLED EXCEPTION! (⊙ˍ⊙) Shutting down...');
+  console.log("UNHANDLED EXCEPTION! (⊙ˍ⊙) Shutting down...");
   // eslint-disable-next-line no-console
   console.log(err.name, err.message);
   process.exit(1);
 });
 
-const app = require('./app');
+const app = require("./app");
 
-const DB_URL = process.env.DATABASE_URL.replace(
-  '<PASSWORD>',
-  process.env.DATABASE_PASSWORD
-);
+const connectDB = async () => {
+  try {
+    // LOCAL DATABASE
+    // const connect =mongoose.connect(process.env.DATABASE_LOCAL);
+    const connect = await mongoose.connect(DB_URL);
+    console.log("DB connection successful!");
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log(err.name, err.message);
+    process.exit(1);
+  }
+};
 
-// eslint-disable-next-line no-console
-mongoose.connect(DB_URL).then(() => console.log('DB connection successful!'));
-
-// LOCAL DATABASE
-// mongoose.connect(process.env.DATABASE_LOCAL).then(() => console.log('DB connection successful!'));
-
-const PORT = process.env.PORT || 8000;
-
-//* START THE SERVER
-const server = app.listen(PORT, () => {
-  // eslint-disable-next-line no-console
-  console.log(
-    `App running on port %c${PORT}%c...`,
-    'color:#8bc34a',
-    'color:inherit'
-  );
+//Connect to the database before listening
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    // eslint-disable-next-line no-console
+    console.log(
+      `App running on port %c${PORT}%c, and listening for requests...`,
+      "color:#8bc34a",
+      "color:inherit"
+    );
+  });
 });
 
-process.on('unhandledRejection', (err) => {
+process.on("unhandledRejection", (err) => {
   // eslint-disable-next-line no-console
-  console.log('UNHANDLED REJECTION! (⊙ˍ⊙) Shutting down...');
+  console.log("UNHANDLED REJECTION! (⊙ˍ⊙) Shutting down...");
   // eslint-disable-next-line no-console
   console.log(err.name, err.message);
-
-  server.close(() => {
-    process.exit(1);
-  });
 });
